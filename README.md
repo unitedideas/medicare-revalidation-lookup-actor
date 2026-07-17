@@ -15,6 +15,13 @@ Each dataset row includes:
 
 Results export as JSON, CSV, Excel, XML, or RSS.
 
+## Ready-to-run examples
+
+- [Credentialing roster check](https://apify.com/actablesite/medicare-revalidation-lookup-actor/examples/medicare-revalidation-roster-check-for-credentialing) — check a provider roster before credentialing follow-up.
+- [Medical billing revalidation dates](https://apify.com/actablesite/medicare-revalidation-lookup-actor/examples/medicare-revalidation-dates-for-medical-billing) — export public due dates and TBD records for billing operations.
+
+Each example opens with the NPI field and result table already configured. Apify duplicates the task into the user's own account, so the user's runs and datasets remain private.
+
 ## Price and run limit
 
 - **$0.01 per returned NPI result**
