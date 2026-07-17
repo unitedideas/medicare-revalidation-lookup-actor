@@ -45,15 +45,30 @@ This is a low-ticket acquisition product, not the final revenue ceiling. Its rol
 
 ## Product change selected
 
-Add a private saved-roster comparison mode:
+The private saved-roster comparison mode is live. The next selected change is to join the current revalidation list with the quarterly Medicare Fee-For-Service Public Provider Enrollment file in every paid result:
 
-- first full run creates a baseline for the exact NPI roster;
-- later full runs classify newly listed, no longer listed, due-date, status, and enrollment changes;
-- a partial charge-limited run never advances the baseline;
-- customers can save the input as an Apify task and use Apify scheduling for unattended repeat runs;
-- no live PECOS or contractor-status claim is introduced.
+- the Actor keeps its exact-intent revalidation title and $0.01 result price;
+- each result answers both public enrollment-file presence and revalidation timing;
+- later fully funded runs classify changes in either public source;
+- each source file name, revision, modification time, and row count remain attached;
+- the PPEF quarterly, point-in-time, multiple-NPI, and no-live-PECOS limitations appear before the buyer interprets a no-match;
+- a partial charge-limited run still never advances the private baseline.
 
-This uses named actor storage scoped to the running Apify user, existing pay-per-result billing, and the current CMS source. It adds no owner spend or manual fulfillment.
+This is selected over a generic NPI scraper because the NPI marketplace is crowded and cheaper competitors already have broader search/filter features. It is selected over a standalone exclusion-screening Actor because current Apify Store usage is weak. The combined two-source roster decision is narrower, uses the existing exact-search rank, and gives credentialing and billing teams a distinct output without adding owner spend or manual fulfillment.
+
+Current supporting evidence:
+
+- The official CMS PPEF page says the file is a quarterly point-in-time snapshot of actively approved Medicare billing or order-and-refer enrollments, not real-time reporting.
+- CMS's PPEF methodology says it was created because outsiders lacked a way to validate whether a provider or organization was enrolled in Medicare, but also explains that only one NPI appears in the ENROLLMENT row for multiple-NPI enrollments.
+- The current PPEF source contains 2,981,799 rows; the current revalidation source contains 2,810,052 rows.
+- The closest Apify enrollment Actor reports two total users, one monthly active user, and 24 successful versus six failed public runs in 30 days. That is a small but recurring usage signal, not proof of profit.
+- This Actor currently ranks sixth for `provider enrollment`, first for `medicare revalidation`, has two users, zero paying users, and zero profit.
+
+Additional primary sources:
+
+- https://data.cms.gov/provider-characteristics/medicare-provider-supplier-enrollment/medicare-fee-for-service-public-provider-enrollment
+- https://data.cms.gov/resources/fee-for-service-public-provider-enrollment-methodology
+- https://apify.com/jungle_synthesizer/cms-medicare-pecos-enrollment-crawler
 
 ## Test and rejection rule
 

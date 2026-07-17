@@ -2,7 +2,7 @@
   "actorSpecification": 1,
   "name": "medicare-revalidation-due-date-lookup",
   "title": "Medicare Revalidation Due Date Lookup",
-  "version": "1.1",
+  "version": "1.2",
   "buildTag": "latest",
   "dockerfile": "../Dockerfile",
   "readme": "../README.md",

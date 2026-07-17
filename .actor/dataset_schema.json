@@ -8,37 +8,46 @@
       "status": { "type": "string", "enum": ["date_established", "tbd", "not_on_current_public_list"] },
       "earliest_established_due_date": { "type": ["string", "null"] },
       "enrollment_count": { "type": "integer" },
+      "revalidation_enrollment_count": { "type": "integer" },
       "enrollments": { "type": "array" },
+      "current_public_medicare_enrollment_file_match": { "type": "boolean" },
+      "medicare_enrollment_count": { "type": "integer" },
+      "medicare_enrollment_records": { "type": "array" },
+      "medicare_enrollment_source_data_file_sha1": { "type": "string" },
+      "medicare_enrollment_source_data_file_modified_at": { "type": "string" },
       "checked_at": { "type": "string" },
       "source_data_file_sha1": { "type": "string" },
       "source_data_file_modified_at": { "type": "string" },
       "change_status": {
         "type": "string",
-        "enum": ["baseline", "unchanged", "newly_listed", "no_longer_listed", "due_date_changed", "status_changed", "enrollment_changed"]
+        "enum": ["baseline", "unchanged", "newly_listed", "no_longer_listed", "due_date_changed", "status_changed", "enrollment_changed", "medicare_enrollment_changed"]
       },
       "changed_fields": { "type": "array", "items": { "type": "string" } },
       "previous_status": { "type": ["string", "null"] },
       "previous_earliest_established_due_date": { "type": ["string", "null"] }
     },
-    "required": ["npi", "status", "enrollment_count", "enrollments", "checked_at", "source_data_file_sha1", "source_data_file_modified_at"]
+    "required": ["npi", "status", "current_public_medicare_enrollment_file_match", "medicare_enrollment_count", "medicare_enrollment_records", "enrollment_count", "enrollments", "checked_at", "source_data_file_sha1", "source_data_file_modified_at", "medicare_enrollment_source_data_file_sha1", "medicare_enrollment_source_data_file_modified_at"]
   },
   "views": {
     "overview": {
-      "title": "Medicare revalidation results",
+      "title": "Medicare enrollment and revalidation results",
       "transformation": {
-        "fields": ["npi", "status", "change_status", "earliest_established_due_date", "previous_earliest_established_due_date", "enrollment_count", "changed_fields", "enrollments", "checked_at"]
+        "fields": ["npi", "current_public_medicare_enrollment_file_match", "status", "change_status", "earliest_established_due_date", "previous_earliest_established_due_date", "medicare_enrollment_count", "revalidation_enrollment_count", "changed_fields", "medicare_enrollment_records", "enrollments", "checked_at"]
       },
       "display": {
         "component": "table",
         "properties": {
           "npi": { "label": "NPI", "format": "text" },
-          "status": { "label": "Status", "format": "text" },
+          "current_public_medicare_enrollment_file_match": { "label": "Public Medicare enrollment match", "format": "boolean" },
+          "status": { "label": "Revalidation status", "format": "text" },
           "change_status": { "label": "Change", "format": "text" },
           "earliest_established_due_date": { "label": "Earliest due date", "format": "date" },
           "previous_earliest_established_due_date": { "label": "Previous due date", "format": "date" },
-          "enrollment_count": { "label": "Enrollments", "format": "number" },
+          "medicare_enrollment_count": { "label": "Public enrollment records", "format": "number" },
+          "revalidation_enrollment_count": { "label": "Revalidation records", "format": "number" },
           "changed_fields": { "label": "Changed fields", "format": "object" },
-          "enrollments": { "label": "Enrollment details", "format": "object" },
+          "medicare_enrollment_records": { "label": "Public enrollment details", "format": "object" },
+          "enrollments": { "label": "Revalidation details", "format": "object" },
           "checked_at": { "label": "Checked", "format": "date" }
         }
       }

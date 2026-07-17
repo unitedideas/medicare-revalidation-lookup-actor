@@ -1,13 +1,13 @@
 {
   "title": "Check Medicare revalidation due dates",
-  "description": "Enter 1 to 100 valid NPIs. The Actor returns one current public CMS revalidation result per NPI. Invalid check digits are rejected before any paid result is created.",
+  "description": "Enter 1 to 100 valid NPIs. Each result joins the quarterly Medicare public enrollment file with the current revalidation list and retains both source revisions. Invalid check digits are rejected before any paid result is created.",
   "type": "object",
   "schemaVersion": 1,
   "properties": {
     "npis": {
       "title": "NPIs",
       "type": "array",
-      "description": "One to 100 unique 10-digit NPIs. Each returned NPI row is one paid result. Example NPIs are included only to demonstrate dated and TBD output.",
+      "description": "One to 100 unique 10-digit NPIs. Each returned NPI row is one paid result with public Medicare enrollment-file evidence and revalidation status. Example NPIs demonstrate dated output.",
       "editor": "stringList",
       "default": [
         "1003002296",
@@ -24,7 +24,7 @@
     "compareWithPrevious": {
       "title": "Compare with the previous run",
       "type": "boolean",
-      "description": "For a roster you will run again. The first full run creates a baseline scoped to your Apify account and exact NPI list. Later full runs label public due-date, status, and enrollment changes. Each run keeps the same per-result price and still does not show live PECOS status.",
+      "description": "For a roster you will run again. The first full run creates a baseline scoped to your Apify account and exact NPI list. Later full runs label public enrollment-file, due-date, status, and enrollment changes. Each run keeps the same per-result price and still does not show live PECOS status.",
       "default": false
     }
   },

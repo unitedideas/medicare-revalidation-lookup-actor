@@ -1,6 +1,6 @@
 {
   "actorOutputSchemaVersion": 1,
-  "title": "Medicare revalidation lookup delivery",
+  "title": "Medicare enrollment and revalidation verification delivery",
   "properties": {
     "dataset": {
       "type": "string",

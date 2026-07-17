@@ -2,7 +2,7 @@ import { Actor, log } from "apify";
 import {
   buildRevalidationBaseline,
   compareRevalidationItems,
-  lookupRevalidationNpis,
+  lookupMedicareVerificationNpis,
   monitorBaselineKey,
   monitorStorageName,
 } from "./lib.js";
@@ -11,7 +11,7 @@ await Actor.init();
 
 try {
   const input = await Actor.getInput() || {};
-  const result = await lookupRevalidationNpis(input.npis);
+  const result = await lookupMedicareVerificationNpis(input.npis);
   const compareWithPrevious = input.compareWithPrevious === true;
   let baselineStore = null;
   let baselineKey = null;
@@ -38,7 +38,7 @@ try {
   if (compareWithPrevious && !partial) {
     await baselineStore.setValue(
       baselineKey,
-      buildRevalidationBaseline(result.items, result.source, result.checked_at),
+      buildRevalidationBaseline(result.items, result.sources, result.checked_at),
     );
   }
 
@@ -50,7 +50,7 @@ try {
     dataset_id: process.env.APIFY_DEFAULT_DATASET_ID || "default",
     export_formats: ["json", "csv", "xlsx", "xml", "rss"],
     checked_at: result.checked_at,
-    source: result.source,
+    sources: result.sources,
     charge_event: pricing.isPayPerEvent ? "revalidation-result" : null,
     limitations: result.limitations,
     comparison: {
@@ -65,7 +65,7 @@ try {
       next_step: compareWithPrevious
         ? "Save this input as an Apify task and schedule it to run again. Later full runs compare against the prior full run automatically."
         : "Turn on Compare with the previous run to create a reusable roster baseline.",
-      note: "Comparison covers only changes in the public CMS Medicare Revalidation List. It does not monitor live PECOS or contractor case status.",
+      note: "Comparison covers changes in the public CMS Medicare Revalidation List and quarterly Public Provider Enrollment file. It does not monitor live PECOS or contractor case status.",
     },
     optional_monitoring: {
       product: "Medicare Roster Watch",
@@ -93,7 +93,8 @@ try {
     dated: result.items.filter((item) => item.status === "date_established").length,
     tbd: result.items.filter((item) => item.status === "tbd").length,
     notListed: result.items.filter((item) => item.status === "not_on_current_public_list").length,
-    sourceSha1: result.source.data_file_sha1,
+    revalidationSourceSha1: result.sources.revalidation.data_file_sha1,
+    medicareEnrollmentSourceSha1: result.sources.medicare_enrollment.data_file_sha1,
   });
   await Actor.exit(`Delivered ${recordsReturned} current CMS revalidation result${recordsReturned === 1 ? "" : "s"}.`);
 } catch (error) {

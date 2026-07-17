@@ -4,14 +4,14 @@
 
 - Category: single offer in the Apify Store.
 - Audience: Medicare credentialing teams, RCM and medical-billing operators, provider-network teams, and developers maintaining NPI rosters.
-- Primary conversion: start a paid Actor run for 1 to 100 NPIs, then save and schedule the roster when repeat comparison is useful.
-- Conversion-quality metric: a fully funded run that returns one current, source-dated result per valid NPI and, when enabled, advances the private comparison baseline without claiming live PECOS status.
+- Primary conversion: start a paid Actor run for 1 to 100 NPIs that joins public Medicare enrollment-file evidence with current revalidation timing, then save and schedule the roster when repeat comparison is useful.
+- Conversion-quality metric: a fully funded non-owner run that returns one joined, source-dated result per valid NPI and, when enabled, advances the private two-source comparison baseline without claiming live PECOS status.
 
 ## Decision context
 
-- Main question: Which roster NPIs have a public CMS revalidation date, which are still TBD, and which are absent from the current list?
-- Main anxiety: the output could be stale, confused with submission status, or expensive because of hidden compute charges.
-- Required proof before running: official CMS source identity and revision, exact 100-NPI limit, one-result-per-NPI pricing unit, user-paid platform usage, and the PECOS limitation.
+- Main question: Does this NPI appear in Medicare's public enrollment file, and when is its revalidation due?
+- Main anxiety: a quarterly public-file match or no-match could be mistaken for live PECOS, complete credentialing, or current billing status; compute charges could also be unclear.
+- Required proof before running: both official CMS source identities and revisions, quarterly versus monthly timing, the multiple-NPI limitation, exact 100-NPI limit, one-result-per-NPI pricing unit, user-paid platform usage, and the live-PECOS limitation.
 
 ## Current demand and category evidence
 
@@ -23,6 +23,8 @@
 
 - Measured marketplace state, 2026-07-16: `Medicare Provider & Clinician Search` reports 59 successful public runs in 30 days, 14 total users, and $0.003 per result. This supports paid demand for structured CMS provider data, not demand for revalidation specifically.
 - Measured marketplace state, 2026-07-16: `CMS Medicare PECOS Provider Enrollment Scraper` reports 24 successful and 6 failed public runs in 30 days at $0.001 per record. This supports enrollment-data demand and makes fail-closed source validation a differentiator.
+- Measured source state, 2026-07-17: the current PPEF ENROLLMENT file contains 2,981,799 rows and the current revalidation file contains 2,810,052 rows; live local verification returned one matching record from each source for two known NPIs.
+- Official data boundary: CMS describes PPEF as a quarterly point-in-time extract, not real-time reporting, and states that additional NPIs for a multiple-NPI enrollment live in a separate relational file. The listing must not turn a no-match into a definitive not-enrolled claim.
 - Measured marketplace state, 2026-07-16: `CMS Medicare Provider Scraper` reports 17 successful public runs in 30 days with a $0.005 start fee and item pricing. It is broad CMS extraction, not a dedicated revalidation roster tool.
 - Observed gap: no store result found that names bulk Medicare revalidation due-date lookup as its core job.
 - Same-category reference, 2026-07-17: `CMS Medicare Provider Scraper` leads with the CMS dataset, identifiers, exportable raw fields, and source URLs. It teaches source and output specificity but does not solve revalidation tracking.
@@ -31,8 +33,8 @@
 
 ## Direction
 
-- First screen/listing summary: lead with the task, `Check up to 100 NPIs against the current public CMS Medicare Revalidation List`.
-- Decision path: front-load the credentialing, billing, and provider-enrollment roster jobs; exact input limit, result fields, repeat-comparison switch, price unit, source date, and limits must precede the separate email-monitoring handoff.
-- Trust: use only current CMS public-list claims; explicitly state that the Actor does not show live PECOS submission or contractor case status.
-- Conversion hypothesis: preserving exact revalidation language while adding provider-enrollment, credentialing, billing, and NPI-roster terms will expand qualified discovery without weakening the narrow job; predictable per-NPI pricing and a saved-roster comparison path should then create repeat paid runs.
+- First screen/listing summary: lead with the joined task, `Check public Medicare enrollment and revalidation timing for up to 100 NPIs` while preserving the exact revalidation title that currently ranks first for its narrow Store query.
+- Decision path: front-load the two source roles, credentialing/billing/provider-enrollment roster jobs, exact input limit, joined result fields, repeat-comparison switch, price unit, source dates, and limits before the separate email-monitoring handoff.
+- Trust: name the quarterly PPEF and current revalidation list separately; explicitly state that the Actor does not show live PECOS, complete credentialing, current billing privileges, or conclusive additional-NPI status.
+- Conversion hypothesis: a joined two-source roster result at the existing price will make the Actor more useful and improve qualified `provider enrollment` discovery without weakening its exact `medicare revalidation` position; predictable per-NPI pricing and a saved-roster comparison path should then create repeat paid runs.
 - Desktop/mobile constraint: Apify owns layout and visual system; keep headings self-contained, tables narrow, examples compact, and the input schema usable without horizontal scanning.
