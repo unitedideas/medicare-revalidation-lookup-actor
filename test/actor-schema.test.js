@@ -15,6 +15,8 @@ test("actor is bounded, secret-free, and uses a customer-funded result contract"
   assert.equal(input.properties.compareWithPrevious.default, false);
   assert.match(input.description, /quarterly Medicare public enrollment file/);
   assert.match(source, /Actor\.pushData\(deliveredItems, "revalidation-result"\)/);
+  assert.match(source, /calculatePushDataLimits/);
+  assert.doesNotMatch(source, /recordsReturned = pricing\.isPayPerEvent[\s\S]*chargedCount/);
   assert.match(source, /Actor\.openKeyValueStore\(monitorStorageName\(process\.env\.APIFY_USER_ID\)\)/);
   assert.match(source, /Later full runs compare against the prior full run automatically/);
   assert.doesNotMatch(source, /process\.env\.(?:TOKEN|SECRET|PASSWORD|API_KEY)/);

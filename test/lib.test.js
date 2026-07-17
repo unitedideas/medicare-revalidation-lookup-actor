@@ -89,8 +89,10 @@ test("joins quarterly public Medicare enrollment evidence with current revalidat
   const enrollment = await lookupMedicareEnrollmentNpis(["1003002296", "1386740892"], { fetchImpl, now: () => new Date("2026-07-17T12:00:00Z") });
   assert.equal(enrollment.source.total_rows, 2981799);
   assert.equal(enrollment.items[0].current_public_medicare_enrollment_file_match, true);
+  assert.equal(enrollment.items[0].medicare_enrollment_status, "public_file_match");
   assert.equal(enrollment.items[0].medicare_enrollment_records[0].pecos_associate_control_id, "PAC1");
   assert.equal(enrollment.items[1].current_public_medicare_enrollment_file_match, false);
+  assert.equal(enrollment.items[1].medicare_enrollment_status, "no_public_file_match");
 
   const combined = await lookupMedicareVerificationNpis(["1003002296", "1386740892"], { fetchImpl, now: () => new Date("2026-07-17T12:00:00Z") });
   assert.equal(combined.sources.medicare_enrollment.data_file_sha1, "c554e1e329dcb7d9a0da1bb21b57c65e06abbeea");

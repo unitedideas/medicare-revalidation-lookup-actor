@@ -328,6 +328,7 @@ export async function lookupMedicareEnrollmentNpis(input, options = {}) {
     items: npis.map((npi) => ({
       npi,
       current_public_medicare_enrollment_file_match: (records.get(npi) || []).length > 0,
+      medicare_enrollment_status: (records.get(npi) || []).length > 0 ? "public_file_match" : "no_public_file_match",
       medicare_enrollment_count: (records.get(npi) || []).length,
       medicare_enrollment_records: records.get(npi) || [],
     })),

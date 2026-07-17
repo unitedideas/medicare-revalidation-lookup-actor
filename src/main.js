@@ -25,13 +25,21 @@ try {
     deliveredItems = compareRevalidationItems(result.items, previousBaseline);
   }
 
-  const pricing = Actor.getChargingManager().getPricingInfo();
-  const chargeResult = pricing.isPayPerEvent
-    ? await Actor.pushData(deliveredItems, "revalidation-result")
-    : (await Actor.pushData(deliveredItems), null);
-  const recordsReturned = pricing.isPayPerEvent
-    ? Number(chargeResult?.chargedCount ?? deliveredItems.length)
-    : deliveredItems.length;
+  const chargingManager = Actor.getChargingManager();
+  const pricing = chargingManager.getPricingInfo();
+  const deliveryPlan = pricing.isPayPerEvent
+    ? chargingManager.calculatePushDataLimits({
+      items: deliveredItems,
+      eventName: "revalidation-result",
+      isDefaultDataset: true,
+    })
+    : { limitedItems: deliveredItems };
+  if (pricing.isPayPerEvent) {
+    await Actor.pushData(deliveredItems, "revalidation-result");
+  } else {
+    await Actor.pushData(deliveredItems);
+  }
+  const recordsReturned = deliveryPlan.limitedItems.length;
   const partial = recordsReturned < deliveredItems.length;
   const changedItems = deliveredItems.filter((item) => !["baseline", "unchanged"].includes(item.change_status));
 
@@ -96,7 +104,7 @@ try {
     revalidationSourceSha1: result.sources.revalidation.data_file_sha1,
     medicareEnrollmentSourceSha1: result.sources.medicare_enrollment.data_file_sha1,
   });
-  await Actor.exit(`Delivered ${recordsReturned} current CMS revalidation result${recordsReturned === 1 ? "" : "s"}.`);
+  await Actor.exit(`Delivered ${recordsReturned} Medicare enrollment and revalidation result${recordsReturned === 1 ? "" : "s"}.`);
 } catch (error) {
   const message = error instanceof Error ? error.message : "The CMS revalidation lookup could not be completed.";
   log.error(message);
