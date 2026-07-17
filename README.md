@@ -29,6 +29,26 @@ Each dataset row includes:
 
 Results export as JSON, CSV, Excel, XML, or RSS.
 
+## Use it from an AI agent with MCP
+
+Connect an MCP-compatible AI client to this Actor-only Apify endpoint:
+
+```text
+https://mcp.apify.com?tools=actablesite/medicare-revalidation-lookup-actor
+```
+
+Use Apify's recommended OAuth connection. The buyer signs in to Apify and authorizes the run; no Apify token, Medicare credential, or customer secret is passed to this Actor. The connected buyer pays the same **$0.01 per returned NPI** plus Apify platform usage.
+
+Example prompt:
+
+```text
+Check Medicare public enrollment and revalidation timing for NPIs
+1003002296 and 1508860420. Return the source revisions and explain
+any no-match or TBD result without treating it as live PECOS status.
+```
+
+Apify exposes the input schema and structured result fields to the agent before the run. The endpoint is for point-in-time checks and scheduled Apify tasks; it does not give the agent access to PECOS or contractor systems.
+
 ## Ready-to-run examples
 
 - [Monthly roster comparison](https://apify.com/actablesite/medicare-revalidation-lookup-actor/examples/monthly-medicare-revalidation-roster-comparison) — compare the same NPI roster with its prior fully funded run and flag public-list changes.

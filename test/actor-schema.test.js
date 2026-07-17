@@ -24,4 +24,8 @@ test("actor is bounded, secret-free, and uses a customer-funded result contract"
   assert.match(readme, /does not show live PECOS/i);
   assert.match(readme, /quarterly point-in-time/i);
   assert.match(readme, /additional NPIs/i);
+  assert.match(readme, /https:\/\/mcp\.apify\.com\?tools=actablesite\/medicare-revalidation-lookup-actor/);
+  assert.match(readme, /recommended OAuth connection/);
+  assert.match(readme, /connected buyer pays the same \*\*\$0\.01 per returned NPI\*\*/);
+  assert.match(readme, /no Apify token, Medicare credential, or customer secret is passed to this Actor/);
 });
