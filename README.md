@@ -1,6 +1,19 @@
 # Medicare Revalidation Due Date Lookup
 
-Check **1 to 100 NPIs** against the current public CMS Medicare Revalidation List. Get one source-dated result per NPI: established due date, **TBD**, or not present on the current public list.
+Bulk-check **1 to 100 NPIs** for Medicare provider-enrollment revalidation due dates using the current public CMS Medicare Revalidation List. Built for credentialing, medical-billing, and provider-enrollment rosters, it returns one source-dated result per valid NPI: established due date, **TBD**, or not present on the current public list.
+
+Save the input as an Apify task when you need the same roster again. A later fully funded run can compare with the prior baseline and label public-list changes without exposing the roster in a shared dataset or log.
+
+## At a glance
+
+| Decision | Contract |
+|---|---|
+| Roster | 1 to 100 unique, valid NPIs per run |
+| Source | Current public CMS Medicare Revalidation List with source revision |
+| Result | One row per NPI, including every matching enrollment |
+| Repeat checks | Private prior-run baseline with explicit change classifications |
+| Price | $0.01 per returned NPI result; Actor user pays Apify platform usage |
+| Boundary | Public revalidation dates only—not live PECOS or contractor case status |
 
 ## What you get
 
