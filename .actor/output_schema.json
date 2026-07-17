@@ -1,13 +1,16 @@
 {
-  "actorSpecification": 1,
-  "fields": {
-    "results": {
-      "title": "Revalidation results",
-      "template": "{{links.apiDefaultDatasetUrl}}/items"
-    },
+  "actorOutputSchemaVersion": 1,
+  "title": "Medicare revalidation lookup delivery",
+  "properties": {
     "dataset": {
+      "type": "string",
       "title": "Dataset",
       "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "output": {
+      "type": "string",
+      "title": "Run receipt",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/OUTPUT"
     }
   }
 }
