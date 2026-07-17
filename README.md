@@ -17,6 +17,7 @@ Results export as JSON, CSV, Excel, XML, or RSS.
 
 ## Ready-to-run examples
 
+- [Monthly roster comparison](https://apify.com/actablesite/medicare-revalidation-lookup-actor/examples/monthly-medicare-revalidation-roster-comparison) — compare the same NPI roster with its prior fully funded run and flag public-list changes.
 - [Credentialing roster check](https://apify.com/actablesite/medicare-revalidation-lookup-actor/examples/medicare-revalidation-roster-check-for-credentialing) — check a provider roster before credentialing follow-up.
 - [Medical billing revalidation dates](https://apify.com/actablesite/medicare-revalidation-lookup-actor/examples/medicare-revalidation-dates-for-medical-billing) — export public due dates and TBD records for billing operations.
 
