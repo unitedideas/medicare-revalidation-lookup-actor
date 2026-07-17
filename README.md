@@ -22,6 +22,18 @@ Results export as JSON, CSV, Excel, XML, or RSS.
 
 Each example opens with the NPI field and result table already configured. Apify duplicates the task into the user's own account, so the user's runs and datasets remain private.
 
+## Compare a roster with the previous run
+
+Turn on **Compare with the previous run** when you expect to check the same roster again.
+
+- The first fully funded run creates a baseline for that exact NPI list.
+- Each later fully funded run labels every row as unchanged, newly listed, no longer listed, due-date changed, status changed, or enrollment changed.
+- The baseline is stored under the Apify user who ran the Actor and is not placed in the public dataset or logs.
+- A partial run never replaces the prior full baseline.
+- Save the input as an Apify task and schedule it to run again for unattended comparison and run history.
+
+Comparison uses only the public CMS Medicare Revalidation List. It does not monitor PECOS submissions or contractor case status, and it does not send a separate email. Each scheduled run keeps the same per-result price.
+
 ## Price and run limit
 
 - **$0.01 per returned NPI result**

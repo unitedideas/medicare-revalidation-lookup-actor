@@ -20,6 +20,12 @@
         "type": "string",
         "pattern": "^\\d{10}$"
       }
+    },
+    "compareWithPrevious": {
+      "title": "Compare with the previous run",
+      "type": "boolean",
+      "description": "For a roster you will run again. The first full run creates a baseline scoped to your Apify account and exact NPI list. Later full runs label public due-date, status, and enrollment changes. Each run keeps the same per-result price and still does not show live PECOS status.",
+      "default": false
     }
   },
   "required": ["npis"]

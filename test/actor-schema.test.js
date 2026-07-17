@@ -12,7 +12,10 @@ test("actor is bounded, secret-free, and uses a customer-funded result contract"
   assert.equal(actor.usesStandbyMode, false);
   assert.equal(actor.defaultMemoryMbytes, 128);
   assert.equal(input.properties.npis.maxItems, 100);
-  assert.match(source, /Actor\.pushData\(result\.items, "revalidation-result"\)/);
+  assert.equal(input.properties.compareWithPrevious.default, false);
+  assert.match(source, /Actor\.pushData\(deliveredItems, "revalidation-result"\)/);
+  assert.match(source, /Actor\.openKeyValueStore\(monitorStorageName\(process\.env\.APIFY_USER_ID\)\)/);
+  assert.match(source, /Later full runs compare against the prior full run automatically/);
   assert.doesNotMatch(source, /process\.env\.(?:TOKEN|SECRET|PASSWORD|API_KEY)/);
   assert.match(readme, /platform usage is paid by the Actor user/i);
   assert.match(readme, /does not show live PECOS/i);

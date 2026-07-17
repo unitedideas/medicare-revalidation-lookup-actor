@@ -1,8 +1,86 @@
+import { createHash } from "node:crypto";
+
 export const CMS_REVALIDATION_DATASET_ID = "4c6a7709-84b0-4514-9308-4a41846f5682";
 export const CMS_REVALIDATION_API = `https://data.cms.gov/data-api/v1/dataset/${CMS_REVALIDATION_DATASET_ID}/data-viewer`;
 export const CMS_REVALIDATION_TOOL_URL = "https://data.cms.gov/tools/medicare-revalidation-list";
 export const CMS_REVALIDATION_DATASET_URL = "https://data.cms.gov/provider-characteristics/medicare-provider-supplier-enrollment/revalidation-due-date-list";
 export const MAX_NPIS = 100;
+
+const MONITOR_SCHEMA_VERSION = 1;
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function enrollmentIds(item) {
+  return (item.enrollments || []).map((entry) => entry.enrollment_id).filter(Boolean).sort();
+}
+
+function baselineEntry(item) {
+  return {
+    status: item.status,
+    earliest_established_due_date: item.earliest_established_due_date,
+    enrollment_ids: enrollmentIds(item),
+  };
+}
+
+export function monitorStorageName(userId) {
+  const owner = String(userId || "local-development");
+  return `medicare-revalidation-${sha256(owner).slice(0, 24)}`;
+}
+
+export function monitorBaselineKey(items) {
+  const roster = items.map((item) => item.npi).sort().join(",");
+  return `BASELINE_${sha256(roster).slice(0, 32).toUpperCase()}`;
+}
+
+export function buildRevalidationBaseline(items, source, checkedAt) {
+  return {
+    schema_version: MONITOR_SCHEMA_VERSION,
+    saved_at: checkedAt,
+    source_data_file_sha1: source.data_file_sha1,
+    entries: Object.fromEntries(items.map((item) => [item.npi, baselineEntry(item)])),
+  };
+}
+
+export function compareRevalidationItems(items, previousBaseline) {
+  const previousEntries = previousBaseline?.schema_version === MONITOR_SCHEMA_VERSION
+    ? previousBaseline.entries || {}
+    : null;
+
+  return items.map((item) => {
+    const previous = previousEntries?.[item.npi] || null;
+    if (!previousEntries || !previous) {
+      return {
+        ...item,
+        change_status: "baseline",
+        changed_fields: [],
+        previous_status: null,
+        previous_earliest_established_due_date: null,
+      };
+    }
+
+    const changedFields = [];
+    if (previous.status !== item.status) changedFields.push("status");
+    if (previous.earliest_established_due_date !== item.earliest_established_due_date) changedFields.push("earliest_established_due_date");
+    if (JSON.stringify(previous.enrollment_ids || []) !== JSON.stringify(enrollmentIds(item))) changedFields.push("enrollment_ids");
+
+    let changeStatus = "unchanged";
+    if (previous.status === "not_on_current_public_list" && item.status !== "not_on_current_public_list") changeStatus = "newly_listed";
+    else if (previous.status !== "not_on_current_public_list" && item.status === "not_on_current_public_list") changeStatus = "no_longer_listed";
+    else if (changedFields.includes("earliest_established_due_date")) changeStatus = "due_date_changed";
+    else if (changedFields.includes("status")) changeStatus = "status_changed";
+    else if (changedFields.includes("enrollment_ids")) changeStatus = "enrollment_changed";
+
+    return {
+      ...item,
+      change_status: changeStatus,
+      changed_fields: changedFields,
+      previous_status: previous.status,
+      previous_earliest_established_due_date: previous.earliest_established_due_date,
+    };
+  });
+}
 
 export function validNpi(value) {
   if (!/^\d{10}$/.test(value)) return false;

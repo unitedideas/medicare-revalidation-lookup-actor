@@ -11,7 +11,14 @@
       "enrollments": { "type": "array" },
       "checked_at": { "type": "string" },
       "source_data_file_sha1": { "type": "string" },
-      "source_data_file_modified_at": { "type": "string" }
+      "source_data_file_modified_at": { "type": "string" },
+      "change_status": {
+        "type": "string",
+        "enum": ["baseline", "unchanged", "newly_listed", "no_longer_listed", "due_date_changed", "status_changed", "enrollment_changed"]
+      },
+      "changed_fields": { "type": "array", "items": { "type": "string" } },
+      "previous_status": { "type": ["string", "null"] },
+      "previous_earliest_established_due_date": { "type": ["string", "null"] }
     },
     "required": ["npi", "status", "enrollment_count", "enrollments", "checked_at", "source_data_file_sha1", "source_data_file_modified_at"]
   },
@@ -19,15 +26,18 @@
     "overview": {
       "title": "Medicare revalidation results",
       "transformation": {
-        "fields": ["npi", "status", "earliest_established_due_date", "enrollment_count", "enrollments", "checked_at"]
+        "fields": ["npi", "status", "change_status", "earliest_established_due_date", "previous_earliest_established_due_date", "enrollment_count", "changed_fields", "enrollments", "checked_at"]
       },
       "display": {
         "component": "table",
         "properties": {
           "npi": { "label": "NPI", "format": "text" },
           "status": { "label": "Status", "format": "text" },
+          "change_status": { "label": "Change", "format": "text" },
           "earliest_established_due_date": { "label": "Earliest due date", "format": "date" },
+          "previous_earliest_established_due_date": { "label": "Previous due date", "format": "date" },
           "enrollment_count": { "label": "Enrollments", "format": "number" },
+          "changed_fields": { "label": "Changed fields", "format": "object" },
           "enrollments": { "label": "Enrollment details", "format": "object" },
           "checked_at": { "label": "Checked", "format": "date" }
         }

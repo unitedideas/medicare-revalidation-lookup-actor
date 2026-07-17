@@ -1,19 +1,46 @@
 import { Actor, log } from "apify";
-import { lookupRevalidationNpis } from "./lib.js";
+import {
+  buildRevalidationBaseline,
+  compareRevalidationItems,
+  lookupRevalidationNpis,
+  monitorBaselineKey,
+  monitorStorageName,
+} from "./lib.js";
 
 await Actor.init();
 
 try {
   const input = await Actor.getInput() || {};
   const result = await lookupRevalidationNpis(input.npis);
+  const compareWithPrevious = input.compareWithPrevious === true;
+  let baselineStore = null;
+  let baselineKey = null;
+  let previousBaseline = null;
+  let deliveredItems = result.items;
+
+  if (compareWithPrevious) {
+    baselineStore = await Actor.openKeyValueStore(monitorStorageName(process.env.APIFY_USER_ID));
+    baselineKey = monitorBaselineKey(result.items);
+    previousBaseline = await baselineStore.getValue(baselineKey);
+    deliveredItems = compareRevalidationItems(result.items, previousBaseline);
+  }
+
   const pricing = Actor.getChargingManager().getPricingInfo();
   const chargeResult = pricing.isPayPerEvent
-    ? await Actor.pushData(result.items, "revalidation-result")
-    : (await Actor.pushData(result.items), null);
+    ? await Actor.pushData(deliveredItems, "revalidation-result")
+    : (await Actor.pushData(deliveredItems), null);
   const recordsReturned = pricing.isPayPerEvent
-    ? Number(chargeResult?.chargedCount ?? result.items.length)
-    : result.items.length;
-  const partial = recordsReturned < result.items.length;
+    ? Number(chargeResult?.chargedCount ?? deliveredItems.length)
+    : deliveredItems.length;
+  const partial = recordsReturned < deliveredItems.length;
+  const changedItems = deliveredItems.filter((item) => !["baseline", "unchanged"].includes(item.change_status));
+
+  if (compareWithPrevious && !partial) {
+    await baselineStore.setValue(
+      baselineKey,
+      buildRevalidationBaseline(result.items, result.source, result.checked_at),
+    );
+  }
 
   const output = {
     ok: !partial,
@@ -26,6 +53,20 @@ try {
     source: result.source,
     charge_event: pricing.isPayPerEvent ? "revalidation-result" : null,
     limitations: result.limitations,
+    comparison: {
+      enabled: compareWithPrevious,
+      baseline_created: compareWithPrevious && !previousBaseline && !partial,
+      baseline_updated: compareWithPrevious && !partial,
+      changes_detected: compareWithPrevious ? changedItems.length : null,
+      unchanged_records: compareWithPrevious
+        ? deliveredItems.filter((item) => item.change_status === "unchanged").length
+        : null,
+      storage_scope: compareWithPrevious ? "this Apify user and exact NPI roster" : null,
+      next_step: compareWithPrevious
+        ? "Save this input as an Apify task and schedule it to run again. Later full runs compare against the prior full run automatically."
+        : "Turn on Compare with the previous run to create a reusable roster baseline.",
+      note: "Comparison covers only changes in the public CMS Medicare Revalidation List. It does not monitor live PECOS or contractor case status.",
+    },
     optional_monitoring: {
       product: "Medicare Roster Watch",
       price: "$9 USD per month",
@@ -47,6 +88,8 @@ try {
 
   log.info("Medicare revalidation results delivered", {
     records: recordsReturned,
+    comparisonEnabled: compareWithPrevious,
+    changesDetected: compareWithPrevious ? changedItems.length : null,
     dated: result.items.filter((item) => item.status === "date_established").length,
     tbd: result.items.filter((item) => item.status === "tbd").length,
     notListed: result.items.filter((item) => item.status === "not_on_current_public_list").length,
