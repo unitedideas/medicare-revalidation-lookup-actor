@@ -1,0 +1,37 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "npi": { "type": "string" },
+      "status": { "type": "string", "enum": ["date_established", "tbd", "not_on_current_public_list"] },
+      "earliest_established_due_date": { "type": ["string", "null"] },
+      "enrollment_count": { "type": "integer" },
+      "enrollments": { "type": "array" },
+      "checked_at": { "type": "string" },
+      "source_data_file_sha1": { "type": "string" },
+      "source_data_file_modified_at": { "type": "string" }
+    },
+    "required": ["npi", "status", "enrollment_count", "enrollments", "checked_at", "source_data_file_sha1", "source_data_file_modified_at"]
+  },
+  "views": {
+    "overview": {
+      "title": "Medicare revalidation results",
+      "transformation": {
+        "fields": ["npi", "status", "earliest_established_due_date", "enrollment_count", "enrollments", "checked_at"]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "npi": { "label": "NPI", "format": "text" },
+          "status": { "label": "Status", "format": "text" },
+          "earliest_established_due_date": { "label": "Earliest due date", "format": "date" },
+          "enrollment_count": { "label": "Enrollments", "format": "number" },
+          "enrollments": { "label": "Enrollment details", "format": "object" },
+          "checked_at": { "label": "Checked", "format": "date" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "title": "Check Medicare revalidation due dates",
+  "description": "Enter 1 to 100 valid NPIs. The Actor returns one current public CMS revalidation result per NPI. Invalid check digits are rejected before any paid result is created.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "npis": {
+      "title": "NPIs",
+      "type": "array",
+      "description": "One to 100 unique 10-digit NPIs. Each returned NPI row is one paid result. Example NPIs are included only to demonstrate dated and TBD output.",
+      "editor": "stringList",
+      "default": [
+        "1003002296",
+        "1508860420"
+      ],
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^\\d{10}$"
+      }
+    }
+  },
+  "required": ["npis"]
+}

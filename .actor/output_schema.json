@@ -1,0 +1,13 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "results": {
+      "title": "Revalidation results",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "dataset": {
+      "title": "Dataset",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    }
+  }
+}

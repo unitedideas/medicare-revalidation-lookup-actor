@@ -1,0 +1,17 @@
+{
+  "name": "medicare-revalidation-due-date-actor",
+  "version": "1.0.0",
+  "description": "Bulk CMS Medicare revalidation due-date lookup by NPI for Apify.",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "apify": "^3.4.4"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Medicare revalidation roster icon</title>
+  <desc id="desc">A dark navy roster with a teal check mark and date tab.</desc>
+  <rect width="512" height="512" rx="112" fill="#0b1f33"/>
+  <rect x="105" y="112" width="302" height="300" rx="36" fill="#f7fbfc"/>
+  <path d="M105 181h302" stroke="#b9d8dc" stroke-width="24"/>
+  <rect x="151" y="74" width="34" height="92" rx="17" fill="#18a6a6"/>
+  <rect x="327" y="74" width="34" height="92" rx="17" fill="#18a6a6"/>
+  <path d="m169 298 59 58 119-128" fill="none" stroke="#087f80" stroke-linecap="round" stroke-linejoin="round" stroke-width="34"/>
+</svg>
