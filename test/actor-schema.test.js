@@ -9,6 +9,7 @@ test("actor is bounded, secret-free, and uses a customer-funded result contract"
   const input = await readJson("../.actor/input_schema.json");
   const source = await readFile(new URL("../src/main.js", import.meta.url), "utf8");
   const readme = await readFile(new URL("../README.md", import.meta.url), "utf8");
+  assert.equal(actor.title, "Medicare NPI Revalidation Due Date Lookup");
   assert.equal(actor.usesStandbyMode, false);
   assert.equal(actor.defaultMemoryMbytes, 128);
   assert.equal(input.properties.npis.maxItems, 100);
