@@ -119,7 +119,7 @@ The Actor queries both official CMS datasets directly, validates their returned 
 
 ## Need change alerts instead of another point-in-time lookup?
 
-[Medicare Roster Watch](https://actablesite.com/pending-medicare-roster-watch?utm_source=apify&utm_medium=actor_readme&utm_campaign=medicare_revalidation_actor) follows public revalidation records and pending-file membership for up to 20 NPIs. It is **$9 USD per month** and sends a dated baseline plus change-only email. It still does not monitor live PECOS or contractor case status.
+[Medicare Roster Watch](https://actablesite.com/api/medicare-roster-watch-referral?source=apify_actor_readme) follows public revalidation records and pending-file membership for up to 20 NPIs. It is **$9 USD per month** and sends a dated baseline plus change-only email. It still does not monitor live PECOS or contractor case status.
 
 ## For developers
 
